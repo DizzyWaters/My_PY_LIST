@@ -5,7 +5,7 @@ class MyList
 {
     public:
     // constructor
-    MyList() : head(nullptr), size(0), capacity(0){}
+    MyList() : head(nullptr), tail(nullptr), size(0), capacity(0){}
     // functions
     void append(int inputData)
     {
@@ -21,7 +21,10 @@ class MyList
             {
                 currentNode = currentNode->next;
             }
+
             currentNode->next = newNode;
+            newNode->prev = currentNode;
+            tail = newNode;
         }
         // incrementing
         this->capacity++;
@@ -29,32 +32,71 @@ class MyList
     }
     void extend(MyList &obj)
     {
-        Node* lastNode;// I need to add findLast method in private
-        if (head == obj.head)
-        {  
-                // logic
+        if(obj.head == nullptr)
+        {
+
         }
         else
         {
-            Node* currentNode = head;
-            while(currentNode->next != nullptr)
-            {   
-                currentNode = currentNode->next;
+        Node* lastNode;// I need to add findLast method in private
+        if (head == obj.head) {
+            Node* current = obj.head;
+            unsigned int originalSize = obj.size;
+        
+            for (unsigned int i = 0; i < originalSize; ++i) {
+                this->append(current->data);  
+                current = current->next;
             }
-            lastNode = currentNode;
+            return;
         }
-        lastNode->next = obj.head;
-        size += obj.size;
-        capacity += obj.capacity;
-
+        else
+        {
+            unsigned int secondSize = obj.size;
+            Node* current = obj.head;
+            while(current != nullptr)
+            {
+                this->append(current->data);
+                current = current->next;
+            }
+          return;
+        }
+     
+        }
     }
     void clear();
     void copy();
     int count();
+    // function that returns size
     unsigned int Size(){
         return this->size;
     }
-    unsigned int index(); // for 0 < size
+    // functions that returns data by index
+    int index(int index) {
+
+        if (index > size){
+            printf("Out of bound\n");
+        }
+
+        Node* tmp = head;
+        for (size_t i = 0 ; i < index; ++i){
+            tmp = tmp->next;
+        }
+        return tmp->data;
+    }
+    // function that change data by index
+    int write(int index,const int& value){
+
+        if (index >= size){
+            printf("Out of bound\n");
+        }
+
+        Node* tmp = head;
+        for (size_t i = 0 ; i < index; ++i){
+            tmp = tmp->next;
+        }
+        tmp->data = value;
+        return tmp->data;
+    }
     void insert();
     void pop();
     void remove();
@@ -90,17 +132,20 @@ class MyList
     // variables
     unsigned int size;
     unsigned int capacity;
+   
+   // Node structure
     struct Node
     {
         int data;
         Node* next;
-    //  Node* prev;
+        Node* prev;
 
     // constructor of struct
-        Node (int val) : data(val), next(nullptr){} 
+        Node (int val) : data(val), next(nullptr), prev(nullptr){} 
     };
 
     Node* head;
+    Node* tail;
 };
 
 int main()
@@ -110,7 +155,7 @@ int main()
     for(int i = 0; i < 10; ++i)
     {
     test.append(i);
-    test2.append(10);
+    test2.append(10 + i * 5);
     }
     
     test.print();
@@ -123,6 +168,16 @@ int main()
     mySize = test.Size();
     printf(" size of test - > %d \n", mySize);
     
+    printf("Testing Index\n");
+    
+    for(int i = 0; i < 20; ++i){
+    printf("Index[%d] = %d\n", i, test.index(i));
+    }
+    printf("Testing extend to it self\n");
+
+    test.extend(test);
+
+    test.print();
     
 
     return 0;
