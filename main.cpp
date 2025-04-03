@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <cstdio>
 
 class MyList
@@ -186,7 +185,50 @@ class MyList
         if(index == size){
             return pop();
         }
-        Node* tmp;
+        if(index == 0)
+        {
+            Node* tmp = head;
+            if(tmp->next != nullptr)
+            {
+                head = tmp->next;
+                int rData = head->data;
+                size--;
+                capacity--;
+                delete head;
+                return rData;
+            }
+            else
+            {
+                int rData = head->data;
+                size--;
+                capacity--;
+                delete head;
+            }
+        }
+        if(index == size)
+        {
+            // code here, check corner cases when only 2 elements in list aka size is 2
+            // 
+        }
+        else
+        {
+            Node* left = head;
+            int rData = 0;
+            for(int i = 0; i < index; ++i)
+            {
+                left = left->next;
+            }
+            Node* right = left->next;
+            rData = right->data;
+            Node* tmp = right;
+            right = right->prev;
+            right->next = left;
+            left->prev = right;
+            delete tmp;
+            size--;
+            capacity--;
+            return rData;
+        }
 
 
     }
