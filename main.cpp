@@ -5,7 +5,7 @@ class MyList
 {
     public:
     // constructor
-    MyList() : head(nullptr), tail(nullptr), size(0), capacity(0){}
+    MyList() : size(0), capacity(0), head(nullptr), tail(nullptr){}
     // functions
     void append(int inputData)
     {
@@ -21,7 +21,6 @@ class MyList
             {
                 currentNode = currentNode->next;
             }
-
             currentNode->next = newNode;
             newNode->prev = currentNode;
             tail = newNode;
@@ -38,7 +37,6 @@ class MyList
         }
         else
         {
-        Node* lastNode;// I need to add findLast method in private
         if (head == obj.head) {
             Node* current = obj.head;
             unsigned int originalSize = obj.size;
@@ -51,7 +49,6 @@ class MyList
         }
         else
         {
-            unsigned int secondSize = obj.size;
             Node* current = obj.head;
             while(current != nullptr)
             {
@@ -60,7 +57,6 @@ class MyList
             }
           return;
         }
-     
         }
     }
     void clear();
@@ -73,32 +69,127 @@ class MyList
     // functions that returns data by index
     int index(int index) {
 
-        if (index > size){
+        if (index > (int)size){
             printf("Out of bound\n");
         }
 
         Node* tmp = head;
-        for (size_t i = 0 ; i < index; ++i){
+        for (int i = 0 ; i < index; ++i){
             tmp = tmp->next;
         }
         return tmp->data;
     }
     // function that change data by index
-    int write(int index,const int& value){
+    int write(int index, const int& value){
 
-        if (index >= size){
+        if (index >= (int)size){
             printf("Out of bound\n");
         }
-
         Node* tmp = head;
-        for (size_t i = 0 ; i < index; ++i){
+        for (int i = 0 ; i < index; ++i){
             tmp = tmp->next;
         }
         tmp->data = value;
         return tmp->data;
     }
-    void insert();
-    void pop();
+    void insert(const int& index, const int& value)
+    {
+        if (index > (int)size)
+        {
+            printf("Out of bound\n");
+            return;
+        }
+        if(index == 0)
+        {
+            Node* newNode = new Node(value);
+            newNode->next = head;
+            if(head != nullptr)
+            {
+            head->prev = newNode;
+            }
+            head = newNode;
+            if(tail == nullptr)
+            {
+            tail = newNode;
+            }
+            size++;
+            capacity++;
+            return;
+        }        
+        if(index == (int)size)
+        {
+            Node* newNode = new Node(value);
+            newNode->prev = tail;
+            if(tail != nullptr)
+            {
+            tail->next = newNode;
+            }
+            tail = newNode;
+            if(head == nullptr)
+            {
+                head = newNode;
+            }
+            size++;
+            capacity++;
+            return;
+        }
+        else{
+        Node* newNode = new Node(value);
+        Node* currentNode = head;
+        Node* leftNode;
+
+        for(int i = 0; i < index; ++i)
+        {
+            currentNode = currentNode->next;
+        }
+        leftNode = currentNode->prev;
+        leftNode->next = newNode;
+        newNode->prev = leftNode;
+        newNode->next = currentNode;
+        currentNode->prev = newNode; 
+    }
+    }
+    int pop()
+    {
+        if(tail == nullptr)
+        {
+            printf("List is empty\n");
+            return 0;
+        }
+        Node* tmp = tail;
+        int rData = tail->data;
+        tail = tail->prev;
+        if(tail == nullptr)
+        {
+            head = nullptr;
+        }
+        else
+        {
+            tail->next = nullptr;
+        }
+
+        delete  tmp;
+        size--;
+        capacity--;
+        return rData;
+    }
+    int pop(int index)
+    {
+        if (index > size || index < 0){
+            printf("Out of bound\n");
+            return 0;
+        }
+        if (head == nullptr && tail == nullptr){
+            printf("list is empty\n");
+            return 0;   
+        }
+        if(index == size){
+            return pop();
+        }
+        Node* tmp;
+
+
+    }
     void remove();
     void print()
     {
@@ -120,32 +211,24 @@ class MyList
     }
     void reverse();
     void sort();
-    // variables
-
     private:
-    // functions
-    
-
-
-
-
     // variables
     unsigned int size;
     unsigned int capacity;
-   
    // Node structure
     struct Node
     {
         int data;
         Node* next;
         Node* prev;
-
     // constructor of struct
         Node (int val) : data(val), next(nullptr), prev(nullptr){} 
     };
 
     Node* head;
     Node* tail;
+
+    // functions
 };
 
 int main()
@@ -178,7 +261,7 @@ int main()
     test.extend(test);
 
     test.print();
-    
-
+    test.insert(3, 999); 
+    test.print();
     return 0;
 }
