@@ -264,11 +264,13 @@ class MyList
         current = current->prev;
     }
 
+    // swap
     tmp = head;
     head = tail;
     tail = tmp;
     }
-    void sort();
+    void sort(); //         Return the number of times x appears in the list.
+    
 
 
     //                  ######## PTIVATE #######
@@ -292,6 +294,7 @@ class MyList
     // functions
 };
 
+    //                      **** MIAN ****
 int main()
 {
     MyList test;
