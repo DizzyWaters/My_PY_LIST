@@ -229,7 +229,9 @@ class MyList
         return rData;
     }
 
+    // Remove the first item from the list whose value is equal to x. It raises a ValueError if there is no such item.
     void remove();
+   
     void print()
     {
         if (head == nullptr)
@@ -248,7 +250,24 @@ class MyList
             printf("]\n");
         }
     }
-    void reverse();
+    // Reverse the elements of the list in place.
+    void reverse()
+    {
+    Node* current = head;
+    Node* tmp = nullptr;
+
+    while (current != nullptr)
+    {
+        tmp = current->prev;
+        current->prev = current->next;
+        current->next = tmp;
+        current = current->prev;
+    }
+
+    tmp = head;
+    head = tail;
+    tail = tmp;
+    }
     void sort();
 
 
@@ -304,6 +323,18 @@ int main()
 
     test.print();
     test.insert(3, 999); 
+    test.print();
+    test.reverse();
+    printf("reversing list\n");
+    test.print();
+    test.pop();
+    printf("pop\n");
+    test.print();
+    test.reverse();
+    printf("reversing list\n");
+    test.print();
+    test.pop(2);
+    printf("pop\n");
     test.print();
     return 0;
 }
