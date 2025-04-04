@@ -32,7 +32,7 @@ class MyList
     {
         if(obj.head == nullptr)
         {
-
+            return;
         }
         else
         {
@@ -58,9 +58,6 @@ class MyList
         }
         }
     }
-    void clear();
-    void copy();
-    int count();
     // function that returns size
     unsigned int Size(){
         return this->size;
@@ -155,9 +152,11 @@ class MyList
             printf("List is empty\n");
             return 0;
         }
+
         Node* tmp = tail;
         int rData = tail->data;
         tail = tail->prev;
+        
         if(tail == nullptr)
         {
             head = nullptr;
@@ -172,9 +171,10 @@ class MyList
         capacity--;
         return rData;
     }
+
     int pop(int index)
     {
-        if (index > size || index < 0){
+        if (index >= size || index < 0){
             printf("Out of bound\n");
             return 0;
         }
@@ -182,56 +182,53 @@ class MyList
             printf("list is empty\n");
             return 0;   
         }
-        if(index == size){
+        if(index == (size -1))
+        {
             return pop();
         }
+
+        Node* tmp;
+        int rData;
+
         if(index == 0)
         {
-            Node* tmp = head;
-            if(tmp->next != nullptr)
+            tmp = head;
+            if(head->next != nullptr)
             {
-                head = tmp->next;
-                int rData = head->data;
-                size--;
-                capacity--;
-                delete head;
-                return rData;
+                tmp = head;
+                head = tmp->next;   
+                rData = tmp->data;
+                delete tmp;
             }
-            else
+            else // list contains only one node
             {
-                int rData = head->data;
-                size--;
-                capacity--;
+                rData = head->data;
                 delete head;
+                head = nullptr;
+                tail = nullptr;
             }
-        }
-        if(index == size)
-        {
-            // code here, check corner cases when only 2 elements in list aka size is 2
-            // 
         }
         else
         {
-            Node* left = head;
-            int rData = 0;
+            tmp = head;
             for(int i = 0; i < index; ++i)
             {
-                left = left->next;
+                tmp = tmp->next;
             }
-            Node* right = left->next;
-            rData = right->data;
-            Node* tmp = right;
-            right = right->prev;
-            right->next = left;
-            left->prev = right;
+            rData = tmp->data;
+            tmp->prev->next = tmp->next;
+            if(tmp->next != nullptr)
+            {
+            tmp->next->prev = tmp->prev;
+            }
             delete tmp;
-            size--;
-            capacity--;
-            return rData;
         }
 
-
+        size--;
+        capacity--;
+        return rData;
     }
+
     void remove();
     void print()
     {
@@ -253,6 +250,9 @@ class MyList
     }
     void reverse();
     void sort();
+
+
+    //                  ######## PTIVATE #######
     private:
     // variables
     unsigned int size;
