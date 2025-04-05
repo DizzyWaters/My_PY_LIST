@@ -143,7 +143,9 @@ class MyList
         newNode->prev = leftNode;
         newNode->next = currentNode;
         currentNode->prev = newNode; 
-    }
+        size++;
+        capacity++;
+            }
     }
     int pop()
     {
@@ -230,7 +232,24 @@ class MyList
     }
 
     // Remove the first item from the list whose value is equal to x. It raises a ValueError if there is no such item.
-    void remove();
+    void remove(int x)
+    {
+        Node* tmp = head;
+        int index = 0;
+
+        while(tmp != nullptr)
+        {   
+            if(tmp->data == x)
+            {
+                pop(index);
+                return;
+            }
+            tmp = tmp->next;
+            index++;            
+        }
+        printf("ValueError\n");
+        return;
+    }
    
     void print()
     {
@@ -272,6 +291,18 @@ class MyList
     void sort(); //         Return the number of times x appears in the list.
     
 
+    ~MyList()
+{
+    Node* current = head;
+    while(current != nullptr)
+    {
+        Node* next = current->next;
+        delete current;
+        current = next;
+    }
+    head = tail = nullptr;
+    size = capacity = 0;
+}
 
     //                  ######## PTIVATE #######
     private:
